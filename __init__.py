@@ -14,6 +14,10 @@ def MaPremiereAPI():
 def hello_world():
     return render_template('hello.html') #Comm
 
+@app.route('/')
+def commits():
+    return render_template('commits.html') #Comm
+
 @app.route('/tawarano/')
 def meteo():
     response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
