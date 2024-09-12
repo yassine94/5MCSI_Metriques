@@ -14,7 +14,7 @@ def MaPremiereAPI():
 def hello_world():
     return render_template('hello.html') #Comm
 
-@app.route('/')
+@app.route('/commits/')
 def commits():
     return render_template('commits.html') #Comm
 
