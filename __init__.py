@@ -31,7 +31,7 @@ def mongraphique():
     return render_template("graphique.html")
 
 @app.route("/histogramme/")
-def mongraphique2():
+def histogramme():
     return render_template("histogramme.html")
   
 if __name__ == "__main__":
