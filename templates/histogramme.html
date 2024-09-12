@@ -1,37 +1,42 @@
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <title>Histogramme des Températures</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {
-        'packages':['geomap'],
-        // Note: you will need to get a mapsApiKey for your project.
-        // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
-        'mapsApiKey': 'AIzaSyC6_kpm4OV-hHBPZPg8jxaj2y-4CX2XRYs'
-      });
-      google.charts.setOnLoadCallback(drawMap);
-
-      function drawMap() {
-        var data = google.visualization.arrayToDataTable([
-          ['Country', 'Popularity'],
-          ['Germany', 200],
-          ['United States', 300],
-          ['Brazil', 400],
-          ['Canada', 500],
-          ['France', 600],
-          ['RU', 700]
-        ]);
-
-        var options = {};
-        options['dataMode'] = 'regions';
-
-        var container = document.getElementById('regions_div');
-        var geomap = new google.visualization.GeoMap(container);
-
-        geomap.draw(data, options);
-      };
-    </script>
   </head>
   <body>
-    <div id="regions_div" style="width: 900px; height: 500px;"></div>
+    <h2>Histogramme des Températures de Tawarano</h2>
+    <div id="histogram_div"></div>
+    <script>
+      google.charts.load('current', { packages: ['corechart'] });
+      google.charts.setOnLoadCallback(drawHistogram);
+
+      function drawHistogram() {
+        fetch('/tawarano/')
+          .then(response => response.json())
+          .then(data => {
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Date');
+            dataTable.addColumn('number', 'Température (°C)');
+
+            // Convertir les timestamps en dates lisibles et ajouter les températures
+            data.results.forEach(entry => {
+              var date = new Date(entry.Jour * 1000);
+              dataTable.addRow([date.toLocaleDateString(), entry.temp]);
+            });
+
+            var options = {
+              title: 'Évolution des températures de la ville de Tawarano',
+              legend: { position: 'none' },
+              hAxis: { title: 'Date' },
+              vAxis: { title: 'Température (°C)' },
+              histogram: { bucketSize: 1 }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('histogram_div'));
+            chart.draw(dataTable, options);
+          });
+      }
+    </script>
   </body>
 </html>
